@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const bodyParser = require('body-parser');
+
+const jsonParser = bodyParser.json();
 const { login, createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const userRouter = require('./users');
@@ -13,7 +16,7 @@ router.post(
       email: Joi.string().required().email(),
       password: Joi.string().required().min(8).max(30),
     }),
-  }),
+  }), jsonParser,
   login,
 );
 
@@ -25,7 +28,7 @@ router.post(
       password: Joi.string().required(),
       name: Joi.string().required().min(2).max(30),
     }),
-  }),
+  }), jsonParser,
   createUser,
 );
 

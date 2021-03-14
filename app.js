@@ -1,13 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
-const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
-const { errors } = require('celebrate');
+const errorServer = require('./middlewares/errorServer');
 const rateLimiter = require('./middlewares/rateLimit');
-const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const routes = require('./routes/index');
 
 const app = express();
 
@@ -30,9 +30,9 @@ mongoose.connect('mongodb://localhost:27017/movies-explorer-db', {
   useUnifiedTopology: true,
 });
 
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
@@ -51,21 +51,7 @@ app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  if (err.kind === 'ObjectId') {
-    res.status(400).send({
-      message: 'Неверно переданы данные',
-    });
-  } else {
-    res.status(statusCode).send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка.'
-        : message,
-    });
-  }
-  next();
-});
+app.use(errorServer);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
