@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -30,13 +31,14 @@ mongoose.connect('mongodb://localhost:27017/movies-explorer-db', {
   useUnifiedTopology: true,
 });
 
-app.use(express.json());
+app.use(bodyParser.json());
 
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
 app.use(helmet());
+
 app.use(rateLimiter);
 
 app.get('/crash-test', () => {
