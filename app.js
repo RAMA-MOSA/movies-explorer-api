@@ -12,9 +12,9 @@ const routes = require('./routes/index');
 const app = express();
 
 const allowedCors = [
-  'https://m-e.students.nomoredomains.monster',
-  'https://api.m-e.students.nomoredomains.monster',
   'http://localhost:3001',
+  'https://api.m-e.students.nomoredomains.monster',
+  'https://m-e.students.nomoredomains.monster',
 ];
 
 app.use(cors({
