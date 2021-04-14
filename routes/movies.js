@@ -1,5 +1,14 @@
 const movieRouter = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, CelebrateError } = require('celebrate');
+
+const isURL = require('validator/lib/isURL');
+
+const urlValidator = (value) => {
+  if (!isURL(value)) {
+    throw new CelebrateError(`${value} не является URL адресом`);
+  }
+  return value;
+};
 
 const {
   getMovies, createMovie, deleteMovie,
@@ -16,9 +25,9 @@ movieRouter.post(
       duration: Joi.number().required(),
       year: Joi.string().required(),
       description: Joi.string().required(),
-      image: Joi.string().required().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
-      trailer: Joi.string().required().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
-      thumbnail: Joi.string().required().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
+      image: Joi.string().required().custom(urlValidator),
+      trailer: Joi.string().required().custom(urlValidator),
+      thumbnail: Joi.string().required().custom(urlValidator),
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
