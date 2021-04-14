@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const isURL = require('validator/lib/isURL');
+
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -26,7 +28,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/g.test(v);
+        return isURL(v);
       },
       message: 'Ошибка валидации.',
     },
@@ -36,7 +38,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/g.test(v);
+        return isURL(v);
       },
       message: 'Ошибка валидации.',
     },
@@ -46,7 +48,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/g.test(v);
+        return isURL(v);
       },
       message: 'Ошибка валидации.',
     },
